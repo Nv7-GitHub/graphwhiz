@@ -25,7 +25,7 @@ func handle(err error) {
 }
 
 func main() {
-	a := app.New()
+	a := app.NewWithID("com.nv.graphwhiz")
 	win = a.NewWindow("Graphwhiz")
 
 	// Setup UI
