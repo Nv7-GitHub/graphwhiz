@@ -22,7 +22,7 @@ var layouts = map[string]graphviz.Layout{
 	"SFDP":      graphviz.SFDP,
 }
 
-var layoutList = []string{"Dot", "Fdp", "Neato", "Circo", "Twopi", "Osage", "Patchwork", "SFDP"}
+var layoutList = []string{"Dot", "FDP", "Neato", "Circo", "Twopi", "Osage", "Patchwork", "SFDP"}
 
 func Render(input string, output string, format string, layout string) error {
 	v := graphviz.New()
