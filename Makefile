@@ -2,7 +2,7 @@ install:
 	go install fyne.io/fyne/v2/cmd/fyne@latest
 
 build:
-	go build
+	go build -ldflags="-s -w" -o graphwhiz
 ifeq "$(OS)" "Windows_NT"
 	fyne package -os darwin -executable graphwhiz
 else
