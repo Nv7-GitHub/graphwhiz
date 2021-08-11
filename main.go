@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -29,6 +32,10 @@ func main() {
 	vbox := container.NewVBox()
 	outputForm := widget.NewForm()
 
+	// Put these before so that they can be captured by the file open closure
+	outFilename := ""
+	outFileShower := widget.NewEntry()
+
 	filename := ""
 	hbox := container.NewHBox()
 	fileShower := widget.NewEntry()
@@ -37,6 +44,12 @@ func main() {
 			if file != nil {
 				filename = file.URI().Path()
 				fileShower.SetText(filename)
+
+				if outFilename == "" {
+					ext := filepath.Ext(filename)
+					outFilename = filename[:len(filename)-len(ext)]
+					outFileShower.SetText(outFilename)
+				}
 			}
 		}, win)
 		dlg.SetFilter(storage.NewExtensionFileFilter([]string{".dot"}))
@@ -45,9 +58,7 @@ func main() {
 	hbox.Add(fileShower)
 	hbox.Add(saveBtn)
 
-	outFilename := ""
 	outHbox := container.NewHBox()
-	outFileShower := widget.NewEntry()
 	outSaveBtn := widget.NewButton("Select", func() {
 		dlg := dialog.NewFileSave(func(file fyne.URIWriteCloser, err error) {
 			if file != nil {
@@ -66,10 +77,14 @@ func main() {
 	layoutBox := widget.NewSelect(layoutList, func(_ string) {})
 	layoutBox.SetSelectedIndex(0)
 
+	check := widget.NewCheck("", func(_ bool) {})
+	check.SetChecked(false)
+
 	outputForm.Append("Input DOT File", hbox)
 	outputForm.Append("Output File", outHbox)
 	outputForm.Append("Output Type", outputTypeBox)
 	outputForm.Append("Layout", layoutBox)
+	outputForm.Append("Remove original file", check)
 
 	var renderBtn *widget.Button
 	renderBtn = widget.NewButton("Render!", func() {
@@ -78,6 +93,11 @@ func main() {
 
 		err := Render(filename, outFilename, outputTypeBox.Selected, layoutBox.Selected)
 		handle(err)
+
+		if check.Checked {
+			err = os.Remove(filename)
+			handle(err)
+		}
 
 		renderBtn.Enable()
 		renderBtn.SetText("Render!")
