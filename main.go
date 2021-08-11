@@ -46,7 +46,7 @@ func main() {
 
 				if outFilename == "" {
 					ext := filepath.Ext(filename)
-					outFilename = filename[:len(filename)-len(ext)]
+					outFilename = filename[:len(filename)-len(ext)] + ".png"
 					outFileShower.SetText(outFilename)
 				}
 			}
@@ -102,6 +102,7 @@ func main() {
 	vbox.Add(outputForm)
 	vbox.Add(renderBtn)
 	win.SetContent(vbox)
+	win.Resize(fyne.NewSize(700, vbox.MinSize().Height))
 
 	win.ShowAndRun()
 }
