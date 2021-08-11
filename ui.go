@@ -7,7 +7,7 @@ import (
 var win *ui.Window
 
 func setupUI() {
-	win = ui.NewWindow("Screenlapse", 640, 0, true)
+	win = ui.NewWindow("Graphwhiz", 640, 0, true)
 	win.OnClosing(func(*ui.Window) bool {
 		ui.Quit()
 		return true
@@ -70,13 +70,20 @@ func setupUI() {
 	renderBtn := ui.NewButton("Render!")
 	renderBtn.OnClicked(func(*ui.Button) {
 		renderBtn.Disable()
-		renderBtn.SetText("Converting...")
-		err := Render(filename, outFilename, outputTypeList[outputTypeBox.Selected()], layoutList[layoutBox.Selected()])
-		handle(err)
-		renderBtn.Enable()
+		renderBtn.SetText("Rendering...")
+
+		go func() {
+			err := Render(filename, outFilename, outputTypeList[outputTypeBox.Selected()], layoutList[layoutBox.Selected()])
+			handle(err)
+
+			ui.QueueMain(func() {
+				renderBtn.Enable()
+				renderBtn.SetText("Render!")
+			})
+		}()
 	})
 
-	vbox.Append(outputGroup, false)
+	vbox.Append(outputGroup, true)
 	vbox.Append(renderBtn, false)
 	win.SetChild(vbox)
 
