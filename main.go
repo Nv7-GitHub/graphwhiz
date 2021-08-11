@@ -37,7 +37,6 @@ func main() {
 	outFileShower := widget.NewEntry()
 
 	filename := ""
-	hbox := container.NewHBox()
 	fileShower := widget.NewEntry()
 	saveBtn := widget.NewButton("Select", func() {
 		dlg := dialog.NewFileOpen(func(file fyne.URIReadCloser, err error) {
@@ -55,10 +54,8 @@ func main() {
 		dlg.SetFilter(storage.NewExtensionFileFilter([]string{".dot"}))
 		dlg.Show()
 	})
-	hbox.Add(fileShower)
-	hbox.Add(saveBtn)
+	hbox := container.NewBorder(nil, nil, nil, saveBtn, fileShower)
 
-	outHbox := container.NewHBox()
 	outSaveBtn := widget.NewButton("Select", func() {
 		dlg := dialog.NewFileSave(func(file fyne.URIWriteCloser, err error) {
 			if file != nil {
@@ -68,8 +65,7 @@ func main() {
 		}, win)
 		dlg.Show()
 	})
-	outHbox.Add(outFileShower)
-	outHbox.Add(outSaveBtn)
+	outHbox := container.NewBorder(nil, nil, nil, outSaveBtn, outFileShower)
 
 	outputTypeBox := widget.NewSelect(outputTypeList, func(_ string) {})
 	outputTypeBox.SetSelectedIndex(0)
