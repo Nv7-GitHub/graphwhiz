@@ -1,5 +1,11 @@
 # graphwhiz
-Use graphviz with a UI!
+Use [graphviz](https://graphviz.org) with a UI!
+
+# Getting the pre-compiled app
+1. Go to the releases tab
+2. Download the right ZIP for your OS (by looking at the filename)
+3. Extract the ZIP
+4. Use!
 
 # Compiling from Source
 This requires the Go compiler and a C compiler. You can get the Go compiler at https://golang.org/dl.
