@@ -1,6 +1,11 @@
 package main
 
-import "github.com/goccy/go-graphviz"
+import (
+	"os"
+	"os/exec"
+
+	"github.com/goccy/go-graphviz"
+)
 
 var outputTypes = map[string]graphviz.Format{
 	"SVG":  graphviz.SVG,
@@ -24,12 +29,24 @@ var layouts = map[string]graphviz.Layout{
 
 var layoutList = []string{"Dot", "FDP", "Neato", "Circo", "Twopi", "Osage", "Patchwork", "SFDP"}
 
-func Render(input string, output string, format string, layout string) error {
-	v := graphviz.New()
-	g, err := graphviz.ParseFile(input)
+func Render(input string, output string, format string, layout string, system bool) error {
+	if !system {
+		v := graphviz.New()
+		g, err := graphviz.ParseFile(input)
+		if err != nil {
+			return err
+		}
+		v.SetLayout(layouts[layout])
+		return v.RenderFilename(g, outputTypes[format], output)
+	}
+
+	cmd := exec.Command(string(layouts[layout]), "-T"+string(outputTypes[format]), input)
+	outFile, err := os.Create(output)
 	if err != nil {
 		return err
 	}
-	v.SetLayout(layouts[layout])
-	return v.RenderFilename(g, outputTypes[format], output)
+	defer outFile.Close()
+
+	cmd.Stdout = outFile
+	return cmd.Run()
 }

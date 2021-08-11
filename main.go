@@ -33,21 +33,17 @@ func main() {
 	outputForm := widget.NewForm()
 
 	// Put these before so that they can be captured by the file open closure
-	outFilename := ""
 	outFileShower := widget.NewEntry()
-
-	filename := ""
 	fileShower := widget.NewEntry()
+
 	saveBtn := widget.NewButton("Select", func() {
 		dlg := dialog.NewFileOpen(func(file fyne.URIReadCloser, err error) {
 			if file != nil {
-				filename = file.URI().Path()
-				fileShower.SetText(filename)
+				fileShower.SetText(file.URI().Path())
 
-				if outFilename == "" {
-					ext := filepath.Ext(filename)
-					outFilename = filename[:len(filename)-len(ext)] + ".png"
-					outFileShower.SetText(outFilename)
+				if outFileShower.Text == "" {
+					ext := filepath.Ext(fileShower.Text)
+					outFileShower.SetText(fileShower.Text[:len(fileShower.Text)-len(ext)] + ".png")
 				}
 			}
 		}, win)
@@ -59,8 +55,7 @@ func main() {
 	outSaveBtn := widget.NewButton("Select", func() {
 		dlg := dialog.NewFileSave(func(file fyne.URIWriteCloser, err error) {
 			if file != nil {
-				outFilename = file.URI().Path()
-				outFileShower.SetText(filename)
+				outFileShower.SetText(file.URI().Path())
 			}
 		}, win)
 		dlg.Show()
@@ -76,22 +71,26 @@ func main() {
 	check := widget.NewCheck("", func(_ bool) {})
 	check.SetChecked(false)
 
+	system := widget.NewCheck("", func(_ bool) {})
+	system.SetChecked(false)
+
 	outputForm.Append("Input DOT File", hbox)
 	outputForm.Append("Output File", outHbox)
 	outputForm.Append("Output Type", outputTypeBox)
 	outputForm.Append("Layout", layoutBox)
 	outputForm.Append("Remove original file", check)
+	outputForm.Append("Use System Graphviz", system)
 
 	var renderBtn *widget.Button
 	renderBtn = widget.NewButton("Render!", func() {
 		renderBtn.Disable()
 		renderBtn.SetText("Rendering...")
 
-		err := Render(filename, outFilename, outputTypeBox.Selected, layoutBox.Selected)
+		err := Render(fileShower.Text, outFileShower.Text, outputTypeBox.Selected, layoutBox.Selected, system.Checked)
 		handle(err)
 
 		if check.Checked {
-			err = os.Remove(filename)
+			err = os.Remove(fileShower.Text)
 			handle(err)
 		}
 

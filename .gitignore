@@ -22,3 +22,6 @@ graphwhiz_mac.zip
 graphwhiz_linux.tar.gz
 graphwhiz_windows.exe.zip
 fyne-cross/*
+
+# Testing Files
+*.dot
