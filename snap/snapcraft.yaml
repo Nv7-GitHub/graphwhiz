@@ -7,6 +7,8 @@ grade: stable
 base: core18
 icon: Icon.png
 license: MIT
+architectures:
+  - amd64
 parts:
   graphwhiz:
     plugin: go
@@ -20,11 +22,9 @@ parts:
       - xorg-dev
     stage-packages:
       - libglu1-mesa
-      - mesa-utils
 apps:
   graphwhiz:
     command: bin/graphwhiz
     plugs:
       - opengl
       - x11
-      - network-bind
