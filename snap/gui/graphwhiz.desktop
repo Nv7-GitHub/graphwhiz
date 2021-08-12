@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=graphwhiz
+Exec=graphwhiz
+Icon=${SNAP}/meta/gui/graphwhiz.png

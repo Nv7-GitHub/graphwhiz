@@ -1,0 +1,30 @@
+name: graphwhiz
+version: git
+summary: Use graphviz with a GUI!
+description: Graphwhiz allows you to use graphviz with a GUI, with an embedded version of graphviz but support for system graphviz too, and many different layout engines!
+confinement: strict
+grade: stable
+base: core18
+icon: Icon.png
+license: MIT
+parts:
+  graphwhiz:
+    plugin: go
+    go-importpath: github.com/Nv7-Github/graphwhiz
+    source: .
+    source-type: git
+    build-packages:
+      - gcc
+      - pkg-config
+      - libgl1-mesa-dev
+      - xorg-dev
+    stage-packages:
+      - libglu1-mesa
+      - mesa-utils
+apps:
+  graphwhiz:
+    command: bin/graphwhiz
+    plugs:
+      - opengl
+      - x11
+      - network-bind
