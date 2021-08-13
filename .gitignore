@@ -27,3 +27,6 @@ dist/*
 # Testing Files
 *.dot
 *.snap
+
+# IDE Files
+.vscode/*
