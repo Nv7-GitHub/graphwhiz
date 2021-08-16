@@ -28,3 +28,4 @@ apps:
     plugs:
       - opengl
       - x11
+      - home
